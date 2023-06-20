@@ -13,7 +13,7 @@ namespace Domain.Entidades
 
         public Saida()
         {
-            CategoriaString = Categoria.ToString();
+            CategoriaString = Categoria.GetDisplayName();
         }
     }
 }

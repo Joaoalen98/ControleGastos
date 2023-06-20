@@ -13,7 +13,7 @@ namespace Domain.Entidades
 
         public Entrada()
         {
-            CategoriaString = Categoria.ToString();
+            CategoriaString = Categoria.GetDisplayName();
         }
     }
 }
