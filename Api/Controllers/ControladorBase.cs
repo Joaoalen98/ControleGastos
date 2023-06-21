@@ -4,7 +4,7 @@ namespace Api.Controllers
 {
     public class ControladorBase : ControllerBase
     {
-        protected IActionResult EnviarErro(int statusCode, string msg, object? data)
+        protected IActionResult EnviarErro(int statusCode, string msg, object? data = null)
         {
             return StatusCode(statusCode, new
             {
