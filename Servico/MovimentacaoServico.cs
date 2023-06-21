@@ -5,18 +5,18 @@ using Repositorio;
 
 namespace Servico
 {
-    public class EntradaServico
+    public class MovimentacaoServico
     {
-        private EntradaRepositorio entradaRepositorio;
+        private MovimentacaoRepositorio entradaRepositorio;
 
-        public EntradaServico(EntradaRepositorio entradaRepositorio)
+        public MovimentacaoServico(MovimentacaoRepositorio entradaRepositorio)
         {
             this.entradaRepositorio = entradaRepositorio;
         }
 
-        public async Task Criar(NovaEntradaDTO dto)
+        public async Task Criar(NovaMovimentacaoDTO dto)
         {
-            var entrada = new Entrada
+            var entrada = new Movimentacao
             {
                 Categoria = dto.Categoria,
                 DataEntrada = dto.DataEntrada,
@@ -27,18 +27,18 @@ namespace Servico
             await entradaRepositorio.Criar(entrada);
         }
 
-        public async Task Editar(Entrada entrada)
+        public async Task Editar(Movimentacao entrada)
         {
             await entradaRepositorio.Editar(entrada);
         }
 
-        public async Task<IEnumerable<Entrada>> ObterTodos(
-            string usuarioId, DateTime? dataInicial, DateTime? dataFinal, CategoriaEntradaEnum? categoria)
+        public async Task<IEnumerable<Movimentacao>> ObterTodos(
+            string usuarioId, DateTime? dataInicial, DateTime? dataFinal, CategoriaEnum? categoria)
         {
             return await entradaRepositorio.ObterTodos(usuarioId, dataInicial, dataFinal, categoria);
         }
 
-        public async Task<Entrada?> ObterPorId(string id)
+        public async Task<Movimentacao?> ObterPorId(string id)
         {
             return await entradaRepositorio.ObterPorId(id);
         }

@@ -2,11 +2,11 @@ using Domain.Enums;
 
 namespace Domain.DTOs
 {
-    public class NovaEntradaDTO
+    public class NovaMovimentacaoDTO
     {
         public double Valor { get; set; }
         public DateTime DataEntrada { get; set; }
-        public CategoriaEntradaEnum Categoria { get; set; }
+        public CategoriaEnum Categoria { get; set; }
         public string UsuarioId { get; set; }
     }
 }

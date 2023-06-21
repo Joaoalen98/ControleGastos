@@ -16,11 +16,11 @@ builder.Services.AddDbContext<AppDbContext>(x =>
 builder.Services.AddTransient<HashService>();
 builder.Services.AddTransient<JwtService>();
 builder.Services.AddTransient<UsuarioServico>();
-builder.Services.AddTransient<EntradaServico>();
+builder.Services.AddTransient<MovimentacaoServico>();
 
 // repositorio
 builder.Services.AddTransient<UsuarioRepositorio>();
-builder.Services.AddTransient<EntradaRepositorio>();
+builder.Services.AddTransient<MovimentacaoRepositorio>();
 
 
 var app = builder.Build();

@@ -4,31 +4,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Repositorio
 {
-    public class EntradaRepositorio
+    public class MovimentacaoRepositorio
     {
         private AppDbContext context;
 
-        public EntradaRepositorio(AppDbContext context)
+        public MovimentacaoRepositorio(AppDbContext context)
         {
             this.context = context;
         }
 
-        public async Task Criar(Entrada entrada)
+        public async Task Criar(Movimentacao entrada)
         {
-            await context.Entradas.AddAsync(entrada);
+            await context.Movimentacoes.AddAsync(entrada);
             await context.SaveChangesAsync();
         }
 
-        public async Task Editar(Entrada entrada)
+        public async Task Editar(Movimentacao entrada)
         {
             context.Update(entrada);
             await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Entrada>> ObterTodos(
-            string usuarioId, DateTime? dataInicial, DateTime? dataFinal, CategoriaEntradaEnum? categoria)
+        public async Task<IEnumerable<Movimentacao>> ObterTodos(
+            string usuarioId, DateTime? dataInicial, DateTime? dataFinal, CategoriaEnum? categoria)
         {
-            var query = context.Entradas.Where(x => x.UsuarioId == usuarioId);
+            var query = context.Movimentacoes.Where(x => x.UsuarioId == usuarioId);
 
             if (dataInicial != null && dataFinal != null)
             {
@@ -42,15 +42,15 @@ namespace Repositorio
             return await query.ToListAsync();
         }
 
-        public async Task<Entrada?> ObterPorId(string id)
+        public async Task<Movimentacao?> ObterPorId(string id)
         {
-            return await context.Entradas
+            return await context.Movimentacoes
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task Deletar(Entrada entrada)
+        public async Task Deletar(Movimentacao entrada)
         {
-            context.Entradas.Remove(entrada);
+            context.Movimentacoes.Remove(entrada);
             await context.SaveChangesAsync();
         }
     }

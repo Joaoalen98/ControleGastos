@@ -12,19 +12,19 @@ namespace Api.Controllers
     [Route("api/v1/movimentacao")]
     public class MovimentacaoController : ControladorBase
     {
-        private EntradaServico entradaServico;
+        private MovimentacaoServico entradaServico;
 
-        public MovimentacaoController(EntradaServico entradaServico)
+        public MovimentacaoController(MovimentacaoServico entradaServico)
         {
             this.entradaServico = entradaServico;
         }
 
 
-        [HttpGet("entradas")]
+        [HttpGet]
         public async Task<IActionResult> ObterEntradas(
             [FromQuery] DateTime? dataInicial,
             [FromQuery] DateTime? dataFinal,
-            [FromQuery] CategoriaEntradaEnum? categoria
+            [FromQuery] CategoriaEnum? categoria
         )
         {
             try
@@ -39,8 +39,8 @@ namespace Api.Controllers
             }
         }
 
-        [HttpPost("entradas")]
-        public async Task<IActionResult> Criar(NovaEntradaDTO model)
+        [HttpPost]
+        public async Task<IActionResult> Criar(NovaMovimentacaoDTO model)
         {
             if (ModelState.IsValid)
             {
@@ -62,8 +62,8 @@ namespace Api.Controllers
             return EnviarErro(400, "Erro", ModelState);
         }
 
-        [HttpPut("entradas")]
-        public async Task<IActionResult> Editar(Entrada model)
+        [HttpPut]
+        public async Task<IActionResult> Editar(Movimentacao model)
         {
             if (ModelState.IsValid)
             {
