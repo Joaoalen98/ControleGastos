@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33801.468
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{4471111D-E9E9-4C16-BF91-AC4435F12022}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Api\Api.csproj", "{4471111D-E9E9-4C16-BF91-AC4435F12022}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{B125C2FD-3C8D-4F68-9374-CB6121C0E4B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{B125C2FD-3C8D-4F68-9374-CB6121C0E4B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositorio", "Repositorio\Repositorio.csproj", "{9D058089-FD35-4667-AB35-02B34B208E40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositorio", "Repositorio\Repositorio.csproj", "{9D058089-FD35-4667-AB35-02B34B208E40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Servico", "Servico\Servico.csproj", "{3790CBD2-00CD-4AEF-B161-221087E23062}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Servico", "Servico\Servico.csproj", "{3790CBD2-00CD-4AEF-B161-221087E23062}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebApp", "BlazorWebApp\BlazorWebApp.csproj", "{CC432424-F053-4305-8729-0653F0F3F799}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{3790CBD2-00CD-4AEF-B161-221087E23062}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3790CBD2-00CD-4AEF-B161-221087E23062}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3790CBD2-00CD-4AEF-B161-221087E23062}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC432424-F053-4305-8729-0653F0F3F799}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC432424-F053-4305-8729-0653F0F3F799}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC432424-F053-4305-8729-0653F0F3F799}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC432424-F053-4305-8729-0653F0F3F799}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

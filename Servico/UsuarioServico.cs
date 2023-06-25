@@ -36,6 +36,7 @@ namespace Servico
 
             var usuario = new Usuario
             {
+                Id = dto.CPF,
                 Email = dto.Email,
                 CPF = dto.CPF,
                 Nome = dto.Nome,

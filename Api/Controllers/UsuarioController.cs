@@ -28,11 +28,11 @@ namespace Api.Controllers
                 }
                 catch (ApplicationException ex)
                 {
-                    EnviarErro(400, ex.Message, null);
+                    return EnviarErro(400, ex.Message, null);
                 }
                 catch (System.Exception)
                 {
-                    EnviarErro(500, "Erro interno", null);
+                    return EnviarErro(500, "Erro interno", null);
                 }
             }
 
@@ -51,11 +51,11 @@ namespace Api.Controllers
                 }
                 catch (ApplicationException ex)
                 {
-                    EnviarErro(400, ex.Message, null);
+                    return EnviarErro(400, ex.Message, null);
                 }
-                catch (System.Exception)
+                catch (System.Exception ex)
                 {
-                    EnviarErro(500, "Erro interno", null);
+                    return EnviarErro(500, "Erro interno", null);
                 }
             }
 

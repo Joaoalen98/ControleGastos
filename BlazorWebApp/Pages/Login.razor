@@ -1,0 +1,81 @@
+﻿@page "/"
+
+@inject UsuarioApiServico UsuarioApiService
+@inject NavigationManager NavigationManager
+@inject LocalStorageServico LocalStorage
+
+<div class="container mt-3">
+    <h3>Faça login para continuar:</h3>
+
+    <hr />
+
+    @if (!string.IsNullOrEmpty(msgErro))
+    {
+        <div class="alert alert-danger" role="alert">
+            @msgErro
+        </div>
+    }
+
+    <div class="col col-md-4">
+        <EditForm Model="model" OnValidSubmit="EnviaLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary Model="model" />
+
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <InputText class="form-control" @bind-Value="model.Email" placeholder="email@email.com" />
+                <ValidationMessage For="() => model.Email" />
+            </div>
+            <div class="form-group mt-3">
+                <label class="form-label">Senha</label>
+                <InputText class="form-control" @bind-Value="model.Senha" placeholder="*********" />
+                <ValidationMessage For="() => model.Senha" />
+            </div>
+            <div class="mt-3">
+                @if (!enviando)
+                {
+                    <button class="btn btn-primary" type="submit">
+                        Entrar
+                    </button>
+                }
+            </div>
+        </EditForm>
+
+        @if (enviando)
+        {
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private bool enviando = false;
+    private string msgErro = "";
+
+    private LoginDTO model = new LoginDTO();
+
+    private async void EnviaLogin()
+    {
+        enviando = true;
+
+        try
+        {
+            var login = await UsuarioApiService.Login(model);
+            string token = login.token;
+
+            await LocalStorage.SalvarItem("token", token);
+            NavigationManager.NavigateTo("/home", true);
+        }
+        catch (ServicoException ex)
+        {
+            msgErro = ex.Data?.msg;
+        }
+        finally
+        {
+            enviando = false;
+            StateHasChanged();
+        }
+    }
+}
