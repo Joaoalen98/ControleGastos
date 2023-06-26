@@ -28,5 +28,6 @@ builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
 builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped<UsuarioApiServico>();
+builder.Services.AddScoped<MovimentacaoApiServico>();
 
 await builder.Build().RunAsync();

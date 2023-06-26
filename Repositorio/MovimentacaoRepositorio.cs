@@ -26,7 +26,12 @@ namespace Repositorio
         }
 
         public async Task<IEnumerable<Movimentacao>> ObterTodos(
-            string usuarioId, DateTime? dataInicial, DateTime? dataFinal, CategoriaEnum? categoria)
+            string usuarioId,
+            DateTime? dataInicial,
+            DateTime? dataFinal,
+            CategoriaReceitaEnum? categoriaReceita,
+            CategoriaDespesaEnum? categoriaDespesa,
+            TipoMovimentacaoEnum? tipoMovimentacao)
         {
             var query = context.Movimentacoes.Where(x => x.UsuarioId == usuarioId);
 
@@ -34,9 +39,23 @@ namespace Repositorio
             {
                 query = query.Where(x => x.DataEntrada >= dataInicial && x.DataEntrada <= dataFinal);
             }
-            if (categoria != null)
+
+            if (tipoMovimentacao == TipoMovimentacaoEnum.RECEITA)
             {
-                query = query.Where(x => x.Categoria == categoria);
+                query = query.Where(x => x.Valor > 0);
+            }
+            else if (tipoMovimentacao == TipoMovimentacaoEnum.DESPESA)
+            {
+                query = query.Where(x => x.Valor < 0);
+            }
+
+            if (categoriaDespesa != null)
+            {
+                query = query.Where(x => x.CategoriaDespesa == categoriaDespesa);
+            }
+            if (categoriaReceita != null)
+            {
+                query = query.Where(x => x.CategoriaReceita == categoriaReceita);
             }
 
             return await query.ToListAsync();

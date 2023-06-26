@@ -1,17 +1,18 @@
-﻿using Domain.DTOs;
+﻿using BlazorWebApp.Servico.LocalStorage;
+using Domain.DTOs;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace BlazorWebApp.Servico.Api
 {
-    public class UsuarioApiServico
+    public class UsuarioApiServico : BaseApiServico
     {
-        private HttpClient http;
-
-        public UsuarioApiServico(HttpClient http)
+        public UsuarioApiServico(
+            HttpClient http, 
+            LocalStorageServico localStorageServico) 
+            : base(http, localStorageServico)
         {
-            this.http = http;
         }
 
         public async Task<dynamic> Login(LoginDTO model)

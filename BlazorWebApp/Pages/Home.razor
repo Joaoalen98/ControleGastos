@@ -3,7 +3,36 @@
 @attribute [Authorize]
 
 <div class="container mt-3">
-    <h3>Bem vindo</h3>
+    <h3>Seu Dashboard</h3>
+
+
+    <div class="row">
+        <div class="card col-md-6">
+            <div class="card-header">
+                Sua Receita 
+                <i class="bi bi-arrow-up-circle-fill text-success"></i>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">R$ 0,00</h5>
+                <NavLink href="/transacoes/receitas" class="btn btn-success">
+                    Ver Receitas
+                </NavLink>
+            </div>
+        </div>
+
+        <div class="card col-md-6">
+            <div class="card-header">
+                Despesas
+                <i class="bi bi-arrow-down-circle-fill text-danger"></i>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">R$ 0,00</h5>
+                <NavLink href="/transacoes/despesas" class="btn btn-danger">
+                    Ver Despesas
+                </NavLink>
+            </div>
+        </div>
+    </div>
 </div>
 
 @code {

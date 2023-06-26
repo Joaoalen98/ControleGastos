@@ -18,10 +18,12 @@ namespace Servico
         {
             var entrada = new Movimentacao
             {
-                Categoria = dto.Categoria,
+                CategoriaDespesa = dto.CategoriaDespesa,
+                CategoriaReceita = dto.CategoriaReceita,
                 DataEntrada = dto.DataEntrada,
                 UsuarioId = dto.UsuarioId,
                 Valor = dto.Valor,
+                Descricao = dto.Descricao,
             };
 
             await entradaRepositorio.Criar(entrada);
@@ -33,9 +35,20 @@ namespace Servico
         }
 
         public async Task<IEnumerable<Movimentacao>> ObterTodos(
-            string usuarioId, DateTime? dataInicial, DateTime? dataFinal, CategoriaEnum? categoria)
+            string usuarioId, 
+            DateTime? dataInicial, 
+            DateTime? dataFinal, 
+            CategoriaReceitaEnum? categoriaReceita,
+            CategoriaDespesaEnum? categoriaDespesa,
+            TipoMovimentacaoEnum? tipoMovimentacao)
         {
-            return await entradaRepositorio.ObterTodos(usuarioId, dataInicial, dataFinal, categoria);
+            return await entradaRepositorio.ObterTodos(
+                usuarioId, 
+                dataInicial, 
+                dataFinal, 
+                categoriaReceita,
+                categoriaDespesa, 
+                tipoMovimentacao);
         }
 
         public async Task<Movimentacao?> ObterPorId(string id)

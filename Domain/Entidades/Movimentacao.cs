@@ -7,13 +7,19 @@ namespace Domain.Entidades
         public string Id { get; set; }
         public string UsuarioId { get; set; }
         public double Valor { get; set; }
+        public string Descricao { get; set; }
         public DateTime DataEntrada { get; set; }
-        public CategoriaEnum Categoria { get; set; }
-        public string CategoriaString { get; set; }
-
-        public Movimentacao()
+        public CategoriaReceitaEnum? CategoriaReceita { get; set; }
+        public CategoriaDespesaEnum? CategoriaDespesa { get; set; }
+        
+        public string CategoriaReceitaString
         {
-            CategoriaString = Categoria.GetDisplayName();
+            get => CategoriaReceita?.GetDisplayName();
+        }
+
+        public string CategoriaDespesaString
+        {
+            get => CategoriaDespesa?.GetDisplayName();
         }
     }
 }

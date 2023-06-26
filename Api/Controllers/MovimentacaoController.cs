@@ -12,26 +12,34 @@ namespace Api.Controllers
     [Route("api/v1/movimentacao")]
     public class MovimentacaoController : ControladorBase
     {
-        private MovimentacaoServico entradaServico;
+        private MovimentacaoServico movimentacaoServico;
 
-        public MovimentacaoController(MovimentacaoServico entradaServico)
+        public MovimentacaoController(MovimentacaoServico movimentacaoServico)
         {
-            this.entradaServico = entradaServico;
+            this.movimentacaoServico = movimentacaoServico;
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> ObterEntradas(
+        public async Task<IActionResult> Obter(
             [FromQuery] DateTime? dataInicial,
             [FromQuery] DateTime? dataFinal,
-            [FromQuery] CategoriaEnum? categoria
+            [FromQuery] CategoriaReceitaEnum? categoriaReceita,
+            [FromQuery] CategoriaDespesaEnum? categoriaDespesa,
+            [FromQuery] TipoMovimentacaoEnum? tipoMovimentacao = TipoMovimentacaoEnum.TODOS
         )
         {
             try
             {
                 var usuarioId = User.FindFirst("Id").Value;
-                var entradas = await entradaServico.ObterTodos(usuarioId, dataInicial, dataFinal, categoria);
-                return Ok();
+                var entradas = await movimentacaoServico.ObterTodos(
+                    usuarioId, 
+                    dataInicial, 
+                    dataFinal, 
+                    categoriaReceita,
+                    categoriaDespesa,
+                    tipoMovimentacao);
+                return Ok(entradas);
             }
             catch (System.Exception ex)
             {
@@ -46,7 +54,7 @@ namespace Api.Controllers
             {
                 try
                 {
-                    await entradaServico.Criar(model);
+                    await movimentacaoServico.Criar(model);
                     return StatusCode(201);
                 }
                 catch (ApplicationException ex)
@@ -69,7 +77,7 @@ namespace Api.Controllers
             {
                 try
                 {
-                    await entradaServico.Editar(model);
+                    await movimentacaoServico.Editar(model);
                     return Ok();
                 }
                 catch (ApplicationException ex)
@@ -90,7 +98,7 @@ namespace Api.Controllers
         {
             try
             {
-                await entradaServico.Deletar(id);
+                await movimentacaoServico.Deletar(id);
                 return Ok();
             }
             catch (ApplicationException ex)
