@@ -1,53 +1,14 @@
 @page "/transacoes/receitas"
 
 @inject MovimentacaoApiServico MovimentacaoApiServico
+@inject AuthenticationStateProvider AuthProvider
+@inject IJSRuntime Js
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Adicionar movimentação</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <EditForm Model="model">
-                    <div class="form-group">
-                        <label>Valor (R$)</label>
-                        <InputNumber class="form-control" @bind-Value="model.Valor" />
-                    </div>
-                    <div class="form-group">
-                        <label>Descrição</label>
-                        <InputText class="form-control" @bind-Value="model.Descricao" />
-                    </div>
-                    <div class="form-group">
-                        <label>Data</label>
-                        <InputDate class="form-control" @bind-Value="model.DataEntrada" />
-                    </div>
-                    <div class="form-group">
-                        <label>Categoria</label>
-                        <select class="form-control" 
-                            @onchange="(e) => model.CategoriaReceita = Enum.Parse<CategoriaReceitaEnum>(e.Value.ToString())">
-                            @foreach (var categoria in Enum.GetValues<CategoriaReceitaEnum>())
-                            {
-                                <option value="@categoria">
-                                    @categoria
-                                </option>
-                            }
-                        </select>
-                    </div>
-                    <div class="form-group mt-3">
-                        <button class="btn btn-success">
-                            Cadastrar
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Cancelar
-                        </button>
-                    </div>
-                </EditForm>
-            </div>
-        </div>
-    </div>
-</div>
+<ModalAddMovimentacao 
+    aberto="modalAberto"
+    EnviaMovimentacao="EnviaMovimentacao"
+    enviandoForm="enviandoForm"
+    model="model" />
 
 <div class="container mt-3">
     <h3>Receitas</h3>
@@ -67,7 +28,7 @@
                     <i class="bi bi-arrow-up-circle-fill text-success"></i>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title text-succes">R$ 0,00</h5>
+                    <h5 class="card-title text-succes">@recebidos.ToString("c")</h5>
                 </div>
             </div>
             <div class="card col-md-4">
@@ -76,7 +37,7 @@
                     <i class="bi bi-alarm-fill text-success"></i>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">R$ 0,00</h5>
+                    <h5 class="card-title">@pendentes.ToString("c")</h5>
                 </div>
             </div>
             <div class="card col-md-4">
@@ -85,13 +46,13 @@
                     <i class="bi bi-currency-dollar text-success"></i>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">R$ 0,00</h5>
+                    <h5 class="card-title">@total.ToString("c")</h5>
                 </div>
             </div>
         </div>
 
         <div class="mt-3 mb-3">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalMovimentacao">
                 Nova Receita
             </button>
         </div>
@@ -113,12 +74,35 @@
                         <td colspan="5">Sem movimentações neste período.</td>
                     </tr>
                 }
+                else 
+                {
+                    @foreach (var movimentacao in movimentacoes)
+                    {
+                        <tr>
+                            <td>@movimentacao?.DataEntrada.ToString("dd/MM/yyyy")</td>
+                            <td>@movimentacao?.Descricao</td>
+                            <td>@movimentacao?.CategoriaReceita.GetDisplayName()</td>
+                            <td>@movimentacao?.Valor.ToString("c")</td>
+                            <td>
+                                <button class="btn btn-success">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-danger" @onclick="() => DeletaMovimentacao(movimentacao.Id)">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     }
 </div>
 
 @code {
+    private bool modalAberto = false;
+
+    private bool enviandoForm = false;
     private static int mes = DateTime.Now.Month;
     private static int ano = DateTime.Now.Year;
     private DateTime dataIncial = new DateTime(ano, mes, 1);
@@ -127,14 +111,33 @@
     private double recebidos = 0.00;
     private double pendentes = 0.00;
     private double total = 0.00;
-    private NovaMovimentacaoDTO model = new NovaMovimentacaoDTO();
+    private NovaMovimentacaoDTO model = new NovaMovimentacaoDTO()
+    {
+        Valor = 0.00,
+        DataEntrada = DateTime.Now,
+        CategoriaReceita = CategoriaReceitaEnum.SALARIO,
+    };
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await ObterMovimentacoes();
+            StateHasChanged();
+        }
+    }
+
+    private void ToggleModal()
+    {
+        modalAberto = !modalAberto;
+    }
+
+    public async Task ObterMovimentacoes()
     {
         try
         {
             var movs = await MovimentacaoApiServico.ObterMovimentacoes(
-                dataIncial, dataFinal, TipoMovimentacaoEnum.RECEITA
+            dataIncial, dataFinal, TipoMovimentacaoEnum.RECEITA
             );
 
             movimentacoes = movs.ToList();
@@ -142,12 +145,43 @@
             recebidos = movs.Where(x => x.DataEntrada <= DateTime.Now).Sum(x => x.Valor);
             pendentes = movs.Where(x => x.DataEntrada > DateTime.Now).Sum(x => x.Valor);
             total = movs.Sum(x => x.Valor);
-
-            StateHasChanged();
         }
         catch (System.Exception ex)
         {
-            
+
+        }
+    }
+
+    private async Task EnviaMovimentacao()
+    {   
+        enviandoForm = true;
+
+        try
+        {
+            var state = await AuthProvider.GetAuthenticationStateAsync();
+            model.UsuarioId = state.User.FindFirst("Id").Value;
+            await MovimentacaoApiServico.Criar(model);
+        }
+        catch (ServicoException ex)
+        {
+            Console.WriteLine(ex.Data);
+        }
+        finally 
+        {
+            await ObterMovimentacoes();
+            enviandoForm = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeletaMovimentacao(string id)
+    {
+        var confirmar = await Js.InvokeAsync<bool>("confirm", "Tem certeza que deseja deletar esta movimentação?");
+        if (confirmar)
+        {
+            await MovimentacaoApiServico.Deletar(id);
+            await ObterMovimentacoes();
+            StateHasChanged();
         }
     }
 }

@@ -21,5 +21,10 @@ namespace Domain.Entidades
         {
             get => CategoriaDespesa?.GetDisplayName();
         }
+
+        public Movimentacao()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
     }
 }

@@ -1,0 +1,68 @@
+<div class="modal fade" id="modalMovimentacao" tabindex="-1" aria-labelledby="modalMovimentacaoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalMovimentacaoLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="model" OnValidSubmit="EnviaMovimentacao">
+                    <div class="form-group">
+                        <label>Valor (R$)</label>
+                        <InputNumber class="form-control" @bind-Value="model.Valor" />
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <InputText class="form-control" @bind-Value="model.Descricao" />
+                    </div>
+                    <div class="form-group">
+                        <label>Data</label>
+                        <InputDate class="form-control" @bind-Value="model.DataEntrada" />
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select class="form-control"
+                        @onchange="(e) => model.CategoriaReceita = Enum.Parse<CategoriaReceitaEnum>(e.Value.ToString())">
+                            @foreach (var categoria in Enum.GetValues<CategoriaReceitaEnum>())
+                            {
+                                <option value="@categoria">
+                                    @categoria.GetDisplayName()
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group mt-3">
+                        @if (!enviandoForm)
+                        {
+                            <button class="btn btn-success">
+                                Cadastrar
+                            </button>
+                        }
+                        else
+                        {
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        }
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter]
+    public bool aberto { get; set; }
+
+    [Parameter]
+    public NovaMovimentacaoDTO model { get; set; }
+
+    [Parameter]
+    public Func<Task> EnviaMovimentacao { get; set; }
+
+    [Parameter]
+    public bool enviandoForm { get; set; }
+}

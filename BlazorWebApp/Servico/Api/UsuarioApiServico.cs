@@ -1,5 +1,6 @@
 ﻿using BlazorWebApp.Servico.LocalStorage;
 using Domain.DTOs;
+using Domain.Entidades;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -47,16 +48,16 @@ namespace BlazorWebApp.Servico.Api
             }
         }
 
-        public async Task<dynamic> ValidaToken(string token)
+        public async Task<Usuario> ValidaToken(string token)
         {
-            var req = await http.GetAsync("api/v1/usuario/valida-token");
             http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var req = await http.GetAsync("api/v1/usuario/valida-token");
 
             var res = await req.Content.ReadAsStringAsync();
 
             if (req.IsSuccessStatusCode)
             {
-                var obj = JsonConvert.DeserializeObject<dynamic>(res);
+                var obj = JsonConvert.DeserializeObject<Usuario>(res);
                 return obj;
             }
             else

@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Blazored.Modal;
 using BlazorWebApp;
 using BlazorWebApp.Servico.Api;
 using BlazorWebApp.Servico.LocalStorage;
@@ -24,7 +25,10 @@ builder.Services.AddScoped(sp =>
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<LocalStorageServico>();
 
+builder.Services.AddBlazoredModal();
+
 builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
+builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped<UsuarioApiServico>();
