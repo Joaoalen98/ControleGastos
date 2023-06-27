@@ -1,4 +1,7 @@
-<EditForm Model="Model" OnValidSubmit="EnviaMovimentacao">
+﻿<EditForm Model="Model" OnValidSubmit="EditarMovimentacao">
+    <input type="hidden" @bind-value="Model.UsuarioId" />
+    <input type="hidden" @bind-value="Model.Id" />
+
     <div class="form-group">
         <label>Valor (R$)</label>
         <InputNumber class="form-control" @bind-Value="Model.Valor" />
@@ -50,10 +53,10 @@
     public bool EnviandoForm { get; set; }
 
     [Parameter]
-    public NovaMovimentacaoDTO Model { get; set; }
+    public Movimentacao Model { get; set; }
 
     [Parameter]
-    public Func<Task> EnviaMovimentacao { get; set; }
+    public Func<Task> EditarMovimentacao { get; set; }
 
     [Parameter]
     public TipoMovimentacaoEnum TipoMovimentacao { get; set; }

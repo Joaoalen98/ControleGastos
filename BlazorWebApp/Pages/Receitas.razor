@@ -4,12 +4,19 @@
 @inject AuthenticationStateProvider AuthProvider
 @inject IJSRuntime Js
 
-<Modal @ref="modal" Title="Adicionar Movimentação">
+<Modal @ref="modalAdd" Title="Adicionar Movimentação">
     <BodyTemplate>
-        <FormAddMovimentacao
-            EnviaMovimentacao="EnviaMovimentacao"
-            EnviandoForm="enviandoForm"
-            Model="model" />
+        <FormAddMovimentacao EnviaMovimentacao="EnviaMovimentacao"
+                             EnviandoForm="enviandoForm"
+                             Model="modelNovaMovimentacao" />
+    </BodyTemplate>
+</Modal>
+
+<Modal @ref="modalEditar" Title="Adicionar Movimentação">
+    <BodyTemplate>
+        <FormEditarMovimentacao EditarMovimentacao="EditaMovimentacao"
+                                EnviandoForm="enviandoForm"
+                                Model="modelMovimentacao" />
     </BodyTemplate>
 </Modal>
 
@@ -55,7 +62,7 @@
         </div>
 
         <div class="mt-3 mb-3">
-            <button class="btn btn-success" @onclick="AbrirModal">
+            <button class="btn btn-success" @onclick="() => AbrirModal(modalAdd)">
                 Nova Receita
             </button>
         </div>
@@ -77,7 +84,7 @@
                         <td colspan="5">Sem movimentações neste período.</td>
                     </tr>
                 }
-                else 
+                else
                 {
                     @foreach (var movimentacao in movimentacoes)
                     {
@@ -87,7 +94,7 @@
                             <td>@movimentacao?.CategoriaReceita.GetDisplayName()</td>
                             <td>@movimentacao?.Valor.ToString("c")</td>
                             <td>
-                                <button class="btn btn-success">
+                                <button class="btn btn-success" @onclick="() => AbrirModalEdicao(movimentacao)">
                                     <i class="bi bi-pencil"></i>
                                 </button>
                                 <button class="btn btn-danger" @onclick="() => DeletaMovimentacao(movimentacao.Id)">
@@ -104,7 +111,16 @@
 
 @code {
 
-    private Modal modal = default!;
+    private Modal modalAdd = default!;
+    private Modal modalEditar = default!;
+
+    private NovaMovimentacaoDTO modelNovaMovimentacao = new NovaMovimentacaoDTO()
+    {
+        Valor = 0.00,
+        DataEntrada = DateTime.Now,
+        CategoriaReceita = CategoriaReceitaEnum.SALARIO,
+    };
+    private Movimentacao modelMovimentacao = new Movimentacao();
 
     private bool enviandoForm = false;
     private static int mes = DateTime.Now.Month;
@@ -115,12 +131,6 @@
     private double recebidos = 0.00;
     private double pendentes = 0.00;
     private double total = 0.00;
-    private NovaMovimentacaoDTO model = new NovaMovimentacaoDTO()
-    {
-        Valor = 0.00,
-        DataEntrada = DateTime.Now,
-        CategoriaReceita = CategoriaReceitaEnum.SALARIO,
-    };
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -131,12 +141,18 @@
         }
     }
 
-    private async Task AbrirModal()
+    private async Task AbrirModalEdicao(Movimentacao movimentacao)
+    {
+        modelMovimentacao = movimentacao;
+        await AbrirModal(modalEditar);
+    }
+
+    private async Task AbrirModal(Modal modal)
     {
         await modal.ShowAsync();
     }
 
-    private async Task FecharModal()
+    private async Task FecharModal(Modal modal)
     {
         await modal.HideAsync();
     }
@@ -162,26 +178,31 @@
     }
 
     private async Task EnviaMovimentacao()
-    {   
+    {
         enviandoForm = true;
 
         try
         {
             var state = await AuthProvider.GetAuthenticationStateAsync();
-            model.UsuarioId = state.User.FindFirst("Id").Value;
-            await MovimentacaoApiServico.Criar(model);
+            modelNovaMovimentacao.UsuarioId = state.User.FindFirst("Id").Value;
+            await MovimentacaoApiServico.Criar(modelNovaMovimentacao);
         }
         catch (ServicoException ex)
         {
             Console.WriteLine(ex.Data);
         }
-        finally 
+        finally
         {
-            await FecharModal();
+            await FecharModal(modalAdd);
             await ObterMovimentacoes();
             enviandoForm = false;
             StateHasChanged();
         }
+    }
+
+    private async Task EditaMovimentacao()
+    {
+        
     }
 
     private async Task DeletaMovimentacao(string id)
