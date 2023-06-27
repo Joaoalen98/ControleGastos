@@ -4,11 +4,14 @@
 @inject AuthenticationStateProvider AuthProvider
 @inject IJSRuntime Js
 
-<ModalAddMovimentacao 
-    aberto="modalAberto"
-    EnviaMovimentacao="EnviaMovimentacao"
-    enviandoForm="enviandoForm"
-    model="model" />
+<Modal @ref="modal" Title="Adicionar Movimentação">
+    <BodyTemplate>
+        <FormAddMovimentacao
+            EnviaMovimentacao="EnviaMovimentacao"
+            EnviandoForm="enviandoForm"
+            Model="model" />
+    </BodyTemplate>
+</Modal>
 
 <div class="container mt-3">
     <h3>Receitas</h3>
@@ -52,7 +55,7 @@
         </div>
 
         <div class="mt-3 mb-3">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalMovimentacao">
+            <button class="btn btn-success" @onclick="AbrirModal">
                 Nova Receita
             </button>
         </div>
@@ -100,7 +103,8 @@
 </div>
 
 @code {
-    private bool modalAberto = false;
+
+    private Modal modal = default!;
 
     private bool enviandoForm = false;
     private static int mes = DateTime.Now.Month;
@@ -127,9 +131,14 @@
         }
     }
 
-    private void ToggleModal()
+    private async Task AbrirModal()
     {
-        modalAberto = !modalAberto;
+        await modal.ShowAsync();
+    }
+
+    private async Task FecharModal()
+    {
+        await modal.HideAsync();
     }
 
     public async Task ObterMovimentacoes()
@@ -168,6 +177,7 @@
         }
         finally 
         {
+            await FecharModal();
             await ObterMovimentacoes();
             enviandoForm = false;
             StateHasChanged();

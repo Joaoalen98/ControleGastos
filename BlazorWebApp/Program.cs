@@ -1,3 +1,4 @@
+using BlazorBootstrap;
 using Blazored.LocalStorage;
 using Blazored.Modal;
 using BlazorWebApp;
@@ -26,6 +27,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<LocalStorageServico>();
 
 builder.Services.AddBlazoredModal();
+builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
 builder.Services.AddOptions();
