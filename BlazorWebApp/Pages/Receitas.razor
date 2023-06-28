@@ -115,11 +115,11 @@
     private Modal modalEditar = default!;
 
     private NovaMovimentacaoDTO modelNovaMovimentacao = new NovaMovimentacaoDTO()
-    {
-        Valor = 0.00,
-        DataEntrada = DateTime.Now,
-        CategoriaReceita = CategoriaReceitaEnum.SALARIO,
-    };
+        {
+            Valor = 0.00,
+            DataEntrada = DateTime.Now,
+            CategoriaReceita = CategoriaReceitaEnum.SALARIO,
+        };
     private Movimentacao modelMovimentacao = new Movimentacao();
 
     private bool enviandoForm = false;
@@ -132,14 +132,12 @@
     private double pendentes = 0.00;
     private double total = 0.00;
 
-    protected async override Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
-        if (firstRender)
-        {
-            await ObterMovimentacoes();
-            StateHasChanged();
-        }
+        await base.OnInitializedAsync();
+        await ObterMovimentacoes();
     }
+
 
     private async Task AbrirModalEdicao(Movimentacao movimentacao)
     {
@@ -202,7 +200,22 @@
 
     private async Task EditaMovimentacao()
     {
-        
+        enviandoForm = true;
+        try
+        {
+            await MovimentacaoApiServico.Editar(modelMovimentacao);
+            await FecharModal(modalEditar);
+            await ObterMovimentacoes();
+            StateHasChanged();
+        }
+        catch (ServicoException ex)
+        {
+            Console.WriteLine(ex.Data);
+        }
+        finally
+        {
+            enviandoForm = false;
+        }
     }
 
     private async Task DeletaMovimentacao(string id)

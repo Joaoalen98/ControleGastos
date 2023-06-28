@@ -25,7 +25,7 @@
             <select class="form-control" @onchange="(e) => Model.CategoriaReceita = Enum.Parse<CategoriaReceitaEnum>(e.Value.ToString())">
                 @foreach (var categoria in Enum.GetValues<CategoriaReceitaEnum>())
                 {
-                    <option value="@categoria">
+                    <option selected="@(categoria == Model.CategoriaReceita)" value="@categoria">
                         @categoria.GetDisplayName()
                     </option>
                 }

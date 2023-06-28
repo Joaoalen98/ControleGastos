@@ -12,12 +12,12 @@ namespace Domain.Entidades
         public CategoriaReceitaEnum? CategoriaReceita { get; set; }
         public CategoriaDespesaEnum? CategoriaDespesa { get; set; }
         
-        public string CategoriaReceitaString
+        public string? CategoriaReceitaString
         {
             get => CategoriaReceita?.GetDisplayName();
         }
 
-        public string CategoriaDespesaString
+        public string? CategoriaDespesaString
         {
             get => CategoriaDespesa?.GetDisplayName();
         }
