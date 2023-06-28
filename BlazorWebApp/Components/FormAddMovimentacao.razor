@@ -1,3 +1,6 @@
+@inject AuthenticationStateProvider AuthProvider
+@inject MovimentacaoApiServico MovimentacaoApiServico
+
 <EditForm Model="Model" OnValidSubmit="EnviaMovimentacao">
     <div class="form-group">
         <label>Valor (R$)</label>
@@ -46,15 +49,41 @@
 </EditForm>
 
 @code {
-    [Parameter]
-    public bool EnviandoForm { get; set; }
-
-    [Parameter]
-    public NovaMovimentacaoDTO Model { get; set; }
-
-    [Parameter]
-    public Func<Task> EnviaMovimentacao { get; set; }
 
     [Parameter]
     public TipoMovimentacaoEnum TipoMovimentacao { get; set; }
+
+    [Parameter]
+    public EventCallback<EventArgs> OnClickCallback { get; set; }
+
+    public NovaMovimentacaoDTO Model = new NovaMovimentacaoDTO()
+    {
+        DataEntrada = DateTime.Now,
+        CategoriaReceita = CategoriaReceitaEnum.SALARIO,
+    };
+
+    public bool EnviandoForm { get; set; }
+
+
+    private async Task EnviaMovimentacao()
+    {
+        EnviandoForm = true;
+
+        try
+        {
+            var state = await AuthProvider.GetAuthenticationStateAsync();
+            Model.UsuarioId = state.User.FindFirst("Id")!.Value;
+            await MovimentacaoApiServico.Criar(Model);
+
+            await OnClickCallback.InvokeAsync();
+        }
+        catch (ServicoException ex)
+        {
+            Console.WriteLine(ex.Data);
+        }
+        finally
+        {
+            EnviandoForm = false;
+        }
+    }
 }

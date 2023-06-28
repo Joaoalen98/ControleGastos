@@ -1,18 +1,20 @@
-﻿<EditForm Model="Model" OnValidSubmit="EditarMovimentacao">
-    <input type="hidden" @bind-value="Model.UsuarioId" />
-    <input type="hidden" @bind-value="Model.Id" />
+﻿@inject MovimentacaoApiServico MovimentacaoApiServico
+
+<EditForm Model="Movimentacao" OnValidSubmit="EditaMovimentacao">
+    <input type="hidden" @bind-value="Movimentacao.UsuarioId" />
+    <input type="hidden" @bind-value="Movimentacao.Id" />
 
     <div class="form-group">
         <label>Valor (R$)</label>
-        <InputNumber class="form-control" @bind-Value="Model.Valor" />
+        <InputNumber class="form-control" @bind-Value="Movimentacao.Valor" />
     </div>
     <div class="form-group">
         <label>Descrição</label>
-        <InputText class="form-control" @bind-Value="Model.Descricao" />
+        <InputText class="form-control" @bind-Value="Movimentacao.Descricao" />
     </div>
     <div class="form-group">
         <label>Data</label>
-        <InputDate class="form-control" @bind-Value="Model.DataEntrada" />
+        <InputDate class="form-control" @bind-Value="Movimentacao.DataEntrada" />
     </div>
     <div class="form-group">
         <label>Categoria</label>
@@ -22,10 +24,10 @@
         }
         else if (TipoMovimentacao == TipoMovimentacaoEnum.RECEITA)
         {
-            <select class="form-control" @onchange="(e) => Model.CategoriaReceita = Enum.Parse<CategoriaReceitaEnum>(e.Value.ToString())">
+            <select class="form-control" @onchange="(e) => Movimentacao.CategoriaReceita = Enum.Parse<CategoriaReceitaEnum>(e.Value.ToString())">
                 @foreach (var categoria in Enum.GetValues<CategoriaReceitaEnum>())
                 {
-                    <option selected="@(categoria == Model.CategoriaReceita)" value="@categoria">
+                    <option selected="@(categoria == Movimentacao.CategoriaReceita)" value="@categoria">
                         @categoria.GetDisplayName()
                     </option>
                 }
@@ -50,14 +52,33 @@
 
 @code {
     [Parameter]
+    public TipoMovimentacaoEnum TipoMovimentacao { get; set; }
+
+    [Parameter]
+    public Movimentacao Movimentacao { get; set; }
+
+    [Parameter]
+    public EventCallback<EventArgs> OnClickCallback { get; set; }
+
     public bool EnviandoForm { get; set; }
 
-    [Parameter]
-    public Movimentacao Model { get; set; }
 
-    [Parameter]
-    public Func<Task> EditarMovimentacao { get; set; }
+    private async Task EditaMovimentacao()
+    {
+        EnviandoForm = true;
+        try
+        {
+            await MovimentacaoApiServico.Editar(Movimentacao);
+            await OnClickCallback.InvokeAsync();
+        }
+        catch (ServicoException ex)
+        {
+            Console.WriteLine(ex.Data);
+        }
+        finally
+        {
+            EnviandoForm = false;
+        }
+    }
 
-    [Parameter]
-    public TipoMovimentacaoEnum TipoMovimentacao { get; set; }
 }
