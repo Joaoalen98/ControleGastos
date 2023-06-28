@@ -1,37 +1,60 @@
 ﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthProvider
 
-<header>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid container">
-            <a class="navbar-brand"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <AuthorizeView>
-                    <Authorized>
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <NavLink class="nav-link" aria-current="page" href="/home">Home</NavLink>
-                            </li>
-                        </ul>
-                    </Authorized>
-                    <NotAuthorized>
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <NavLink class="nav-link" aria-current="page" href="/" Match="NavLinkMatch.All">Login</NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="/cadastro">Cadastro</NavLink>
-                            </li>
-                        </ul>
-                    </NotAuthorized>
-                </AuthorizeView>
+<div class="bb-page">
+    <Sidebar @ref="sidebar"
+             IconName="IconName.BootstrapFill"
+             Title="Blazor Bootstrap"
+             DataProvider="SidebarDataProvider" />
+    <main>
+        <article class="content px-4">
+            <div class="py-2">
+                @Body
             </div>
-        </div>
-    </nav>
-</header>
+        </article>
+    </main>
+</div>
 
-<main>
-    @Body
-</main>
+@code {
+    private Sidebar sidebar = default!;
+    private IEnumerable<NavItem> navItems = default!;
+
+    private async Task<SidebarDataProviderResult> SidebarDataProvider(SidebarDataProviderRequest request)
+    {
+        if (navItems is null)
+        {
+            var state = await AuthProvider.GetAuthenticationStateAsync();
+
+            if (state.User.Identity.IsAuthenticated)
+            {
+                navItems = GetNavItemsLogado();
+            }
+            else
+            {
+                navItems = GetNavItemsDeslogado();
+            }
+        }
+        return await Task.FromResult(request.ApplyTo(navItems));
+    }
+
+    private IEnumerable<NavItem> GetNavItemsDeslogado()
+    {
+        navItems = new List<NavItem>
+        {
+            new NavItem { Id = "1", Href = "/", IconName = IconName.Person, Text = "Login", Match=NavLinkMatch.All},
+            new NavItem { Id = "2", Href = "/cadastro", IconName = IconName.DoorOpen, Text = "Cadastro"},
+        };
+        return navItems;
+    }
+
+    private IEnumerable<NavItem> GetNavItemsLogado()
+    {
+        navItems = new List<NavItem>
+        {
+            new NavItem { Id = "1", Href = "/home", IconName = IconName.House, Text = "Home" },
+            new NavItem { Id = "1", Href = "/transacoes/receitas", IconName = IconName.CurrencyDollar, Text = "Receitas" },
+            new NavItem { Id = "1", Href = "/transacoes/despesas", IconName = IconName.AlarmFill, Text = "Receitas" },
+        };
+        return navItems;
+    }
+}
