@@ -2,21 +2,20 @@
 
 @attribute [Authorize]
 
-<div class="container mt-3">
+<MudContainer Class="mt-3">
     <h3>Seu Dashboard</h3>
-
 
     <div class="row">
         <div class="card col-md-6">
             <div class="card-header">
-                Sua Receita 
+                Sua Receita
                 <i class="bi bi-arrow-up-circle-fill text-success"></i>
             </div>
             <div class="card-body">
                 <h5 class="card-title">R$ 0,00</h5>
-                <NavLink href="/transacoes/receitas" class="btn btn-success">
+                <MudButton href="/transacoes/receitas" Variant="Variant.Filled" Color="Color.Success">
                     Ver Receitas
-                </NavLink>
+                </MudButton>
             </div>
         </div>
 
@@ -27,13 +26,13 @@
             </div>
             <div class="card-body">
                 <h5 class="card-title">R$ 0,00</h5>
-                <NavLink href="/transacoes/despesas" class="btn btn-danger">
+                <MudButton Href="/transacoes/despesas" Variant="Variant.Filled" Color="Color.Error">
                     Ver Despesas
-                </NavLink>
+                </MudButton>
             </div>
         </div>
     </div>
-</div>
+</MudContainer>
 
 @code {
 

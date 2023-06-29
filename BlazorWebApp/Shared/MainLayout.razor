@@ -1,60 +1,37 @@
 ﻿@inherits LayoutComponentBase
-@inject AuthenticationStateProvider AuthProvider
 
-<div class="bb-page">
-    <Sidebar @ref="sidebar"
-             IconName="IconName.BootstrapFill"
-             Title="Blazor Bootstrap"
-             DataProvider="SidebarDataProvider" />
-    <main>
-        <article class="content px-4">
-            <div class="py-2">
-                @Body
-            </div>
-        </article>
-    </main>
-</div>
+<MudThemeProvider Theme="_theme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Color="Color.Primary">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen">
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
 
 @code {
-    private Sidebar sidebar = default!;
-    private IEnumerable<NavItem> navItems = default!;
+    bool _drawerOpen = true;
 
-    private async Task<SidebarDataProviderResult> SidebarDataProvider(SidebarDataProviderRequest request)
+    MudTheme _theme = new MudTheme
     {
-        if (navItems is null)
+        Palette = new PaletteLight
         {
-            var state = await AuthProvider.GetAuthenticationStateAsync();
-
-            if (state.User.Identity.IsAuthenticated)
-            {
-                navItems = GetNavItemsLogado();
-            }
-            else
-            {
-                navItems = GetNavItemsDeslogado();
-            }
+            Primary = "#240f62",
+            Secondary = "#e666cc",
+            Tertiary = "#7edae3"
         }
-        return await Task.FromResult(request.ApplyTo(navItems));
-    }
+    };
 
-    private IEnumerable<NavItem> GetNavItemsDeslogado()
+    void DrawerToggle()
     {
-        navItems = new List<NavItem>
-        {
-            new NavItem { Id = "1", Href = "/", IconName = IconName.Person, Text = "Login", Match=NavLinkMatch.All},
-            new NavItem { Id = "2", Href = "/cadastro", IconName = IconName.DoorOpen, Text = "Cadastro"},
-        };
-        return navItems;
-    }
-
-    private IEnumerable<NavItem> GetNavItemsLogado()
-    {
-        navItems = new List<NavItem>
-        {
-            new NavItem { Id = "1", Href = "/home", IconName = IconName.House, Text = "Home" },
-            new NavItem { Id = "1", Href = "/transacoes/receitas", IconName = IconName.CurrencyDollar, Text = "Receitas" },
-            new NavItem { Id = "1", Href = "/transacoes/despesas", IconName = IconName.AlarmFill, Text = "Receitas" },
-        };
-        return navItems;
+        _drawerOpen = !_drawerOpen;
     }
 }

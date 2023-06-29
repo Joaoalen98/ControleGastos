@@ -1,12 +1,11 @@
-using BlazorBootstrap;
 using Blazored.LocalStorage;
-using Blazored.Modal;
 using BlazorWebApp;
 using BlazorWebApp.Servico.Api;
 using BlazorWebApp.Servico.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -23,11 +22,10 @@ builder.Services.AddScoped(sp =>
     return http;
 });
 
+builder.Services.AddMudServices();
+
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<LocalStorageServico>();
-
-builder.Services.AddBlazoredModal();
-builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddScoped<AuthenticationStateProvider, AuthProvider>();
 builder.Services.AddOptions();

@@ -2,11 +2,10 @@
 
 @inject MovimentacaoApiServico MovimentacaoApiServico
 @inject AuthenticationStateProvider AuthProvider
+@inject IDialogService DialogService
 @inject IJSRuntime Js
 
-<Modal @ref="modal" />
-
-<div class="container mt-3">
+<MudContainer Class="mt-3">
     <h3>Receitas</h3>
 
     @if (movimentacoes == null)
@@ -48,9 +47,9 @@
         </div>
 
         <div class="mt-3 mb-3">
-            <button class="btn btn-success" @onclick="AbrirModalAdd">
+            <MudButton @onclick="AbrirModalAdd" Variant="Variant.Filled" Color="Color.Success">
                 Nova Receita
-            </button>
+            </MudButton>
         </div>
 
         <table class="table">
@@ -80,12 +79,15 @@
                             <td>@movimentacao?.CategoriaReceita.GetDisplayName()</td>
                             <td>@movimentacao?.Valor.ToString("c")</td>
                             <td>
-                                <button class="btn btn-success" @onclick="() => AbrirModalEditar(movimentacao)">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="btn btn-danger" @onclick="() => DeletaMovimentacao(movimentacao.Id)">
-                                    <i class="bi bi-trash3-fill"></i>
-                                </button>
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                               Variant="Variant.Filled"
+                                               Color="Color.Primary"
+                                               OnClick="() => AbrirModalEditar(movimentacao)" />
+
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                               Variant="Variant.Filled"
+                                               Color="Color.Error"
+                                               OnClick="() => DeletaMovimentacao(movimentacao.Id)" />
                             </td>
                         </tr>
                     }
@@ -93,12 +95,10 @@
             </tbody>
         </table>
     }
-</div>
+</MudContainer>
 
 @code {
     private bool carregando = false;
-
-    private Modal modal = default!;
 
     private List<Movimentacao> movimentacoes;
     private static int mes = DateTime.Now.Month;
@@ -138,28 +138,36 @@
         }
     }
 
-    private async Task AbrirModalAdd()
+    private void AbrirModalAdd()
     {
-        var param = new Dictionary<string, object>();
-        param.Add("TipoMovimentacao", TipoMovimentacaoEnum.RECEITA);
-        param.Add("OnClickCallback", EventCallback.Factory.Create<EventArgs>(this, ConcluiOperacao));
+        var parametros = new DialogParameters();
+        parametros.Add("TipoMovimentacao", TipoMovimentacaoEnum.RECEITA);
+        parametros.Add("OnClickCallback", EventCallback.Factory.Create<EventArgs>(this, ConcluiOperacao));
 
-        await modal.ShowAsync<FormAddMovimentacao>("Adicionar Movimentação", param);
+        var options = new DialogOptions();
+        options.MaxWidth = MaxWidth.Medium;
+        options.FullWidth = true;
+
+        DialogService.Show<FormAddMovimentacao>("Adicionar Movimentação", parametros, options);
     }
 
-    private async Task AbrirModalEditar(Movimentacao movimentacao)
+    private void AbrirModalEditar(Movimentacao movimentacao)
     {
-        var param = new Dictionary<string, object>();
-        param.Add("Movimentacao", movimentacao);
-        param.Add("TipoMovimentacao", TipoMovimentacaoEnum.RECEITA);
-        param.Add("OnClickCallback", EventCallback.Factory.Create<EventArgs>(this, ConcluiOperacao));
+        var parametros = new DialogParameters();
+        parametros.Add("TipoMovimentacao", TipoMovimentacaoEnum.RECEITA);
+        parametros.Add("Movimentacao", movimentacao);
+        parametros.Add("OnClickCallback", EventCallback.Factory.Create<EventArgs>(this, ConcluiOperacao));
 
-        await modal.ShowAsync<FormEditarMovimentacao>("Editar Movimentação", param);
+        var options = new DialogOptions();
+        options.MaxWidth = MaxWidth.Medium;
+        options.FullWidth = true;
+
+        DialogService.Show<FormEditarMovimentacao>("Editar Movimentação", parametros, options);
     }
 
     private async void ConcluiOperacao(EventArgs e)
     {
-        await modal.HideAsync();
+        Console.WriteLine("Hello");
         await ObterMovimentacoes();
         StateHasChanged();
     }

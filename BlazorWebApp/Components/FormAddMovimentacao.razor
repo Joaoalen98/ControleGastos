@@ -1,52 +1,56 @@
 @inject AuthenticationStateProvider AuthProvider
 @inject MovimentacaoApiServico MovimentacaoApiServico
 
-<EditForm Model="Model" OnValidSubmit="EnviaMovimentacao">
-    <div class="form-group">
-        <label>Valor (R$)</label>
-        <InputNumber class="form-control" @bind-Value="Model.Valor" />
-    </div>
-    <div class="form-group">
-        <label>Descrição</label>
-        <InputText class="form-control" @bind-Value="Model.Descricao" />
-    </div>
-    <div class="form-group">
-        <label>Data</label>
-        <InputDate class="form-control" @bind-Value="Model.DataEntrada" />
-    </div>
-    <div class="form-group">
-        <label>Categoria</label>
-        @if (TipoMovimentacao == TipoMovimentacaoEnum.DESPESA)
-        {
-
-        }
-        else if (TipoMovimentacao == TipoMovimentacaoEnum.RECEITA)
-        {
-            <select class="form-control" @onchange="(e) => Model.CategoriaReceita = Enum.Parse<CategoriaReceitaEnum>(e.Value.ToString())">
-                @foreach (var categoria in Enum.GetValues<CategoriaReceitaEnum>())
-                {
-                    <option value="@categoria">
-                        @categoria.GetDisplayName()
-                    </option>
-                }
-            </select>
-        }
-    </div>
-    <div class="form-group mt-3">
-        @if (!EnviandoForm)
-        {
-            <button class="btn btn-success">
-                Cadastrar
-            </button>
-        }
-        else
-        {
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+<MudDialog>
+    <DialogContent>
+        <EditForm Model="Model" OnValidSubmit="EnviaMovimentacao">
+            <div class="form-group">
+                <label>Valor (R$)</label>
+                <InputNumber class="form-control" @bind-Value="Model.Valor" />
             </div>
-        }
-    </div>
-</EditForm>
+            <div class="form-group">
+                <label>Descrição</label>
+                <InputText class="form-control" @bind-Value="Model.Descricao" />
+            </div>
+            <div class="form-group">
+                <label>Data</label>
+                <InputDate class="form-control" @bind-Value="Model.DataEntrada" />
+            </div>
+            <div class="form-group">
+                <label>Categoria</label>
+                @if (TipoMovimentacao == TipoMovimentacaoEnum.DESPESA)
+                {
+
+                }
+                else if (TipoMovimentacao == TipoMovimentacaoEnum.RECEITA)
+                {
+                    <select class="form-control" @onchange="(e) => Model.CategoriaReceita = Enum.Parse<CategoriaReceitaEnum>(e.Value.ToString())">
+                        @foreach (var categoria in Enum.GetValues<CategoriaReceitaEnum>())
+                        {
+                            <option value="@categoria">
+                                @categoria.GetDisplayName()
+                            </option>
+                        }
+                    </select>
+                }
+            </div>
+            <div class="form-group mt-3">
+                @if (!EnviandoForm)
+                {
+                    <button class="btn btn-success">
+                        Cadastrar
+                    </button>
+                }
+                else
+                {
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                }
+            </div>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
 
 @code {
 
@@ -55,6 +59,9 @@
 
     [Parameter]
     public EventCallback<EventArgs> OnClickCallback { get; set; }
+
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; }
 
     public NovaMovimentacaoDTO Model = new NovaMovimentacaoDTO()
     {
@@ -74,8 +81,8 @@
             var state = await AuthProvider.GetAuthenticationStateAsync();
             Model.UsuarioId = state.User.FindFirst("Id")!.Value;
             await MovimentacaoApiServico.Criar(Model);
-
             await OnClickCallback.InvokeAsync();
+            MudDialog.Close();
         }
         catch (ServicoException ex)
         {

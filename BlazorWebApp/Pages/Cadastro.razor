@@ -21,41 +21,25 @@
             <DataAnnotationsValidator />
             <ValidationSummary Model="model" />
 
-            <div class="form-group">
-                <label class="form-label">Nome</label>
-                <InputText class="form-control" @bind-Value="model.Nome" placeholder="" />
-                <ValidationMessage For="() => model.Nome" />
-            </div>
-            <div class="form-group">
-                <label class="form-label">Email</label>
-                <InputText class="form-control" @bind-Value="model.Email" placeholder="email@email.com" />
-                <ValidationMessage For="() => model.Email" />
-            </div>
-            <div class="form-group">
-                <label class="form-label">CPF</label>
-                <InputText class="form-control" @bind-Value="model.CPF" placeholder="000.000.000-00" />
-                <ValidationMessage For="() => model.CPF" />
-            </div>
-            <div class="form-group mt-3">
-                <label class="form-label">Senha</label>
-                <InputText class="form-control" @bind-Value="model.Senha" placeholder="*********" />
-                <ValidationMessage For="() => model.Senha" />
-            </div>
+            <MudTextField class="form-control" Label="Nome" For="() => model.Nome" @bind-Value="model.Nome" placeholder="" />
+            <MudTextField class="form-control" Label="Email" For="() => model.Email" @bind-Value="model.Email" placeholder="email@email.com" />
+            <MudTextField class="form-control" Label="CPF" For="() => model.CPF" @bind-Value="model.CPF" placeholder="000.000.000-00" />
+            <MudTextField class="form-control" Label="Senha" @bind-Value="model.Senha" InputType="InputType.Password" For="() => model.Senha" placeholder="*********" />
+
             <div class="mt-3">
                 @if (!enviando)
                 {
-                    <button class="btn btn-primary" type="submit">
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">
                         Cadastrar-se
-                    </button>
+                    </MudButton>
+                }
+                else
+                {
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
                 }
             </div>
-
-            @if (enviando)
-            {
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            }
         </EditForm>
     </div>
 </div>
