@@ -5,17 +5,21 @@ import { UsuarioRoutingModule } from './usuario-routing.module';
 import { LoginComponent } from './login/login.component';
 import { CadastroComponent } from './cadastro/cadastro.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SpinnerComponent } from 'src/app/components/global/spinner/spinner.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
-    CadastroComponent
+    CadastroComponent,
+    SpinnerComponent,
   ],
   imports: [
     CommonModule,
     UsuarioRoutingModule,
-    NgbModule
+    NgbModule,
+    FormsModule,
   ]
 })
 export class UsuarioModule { }
