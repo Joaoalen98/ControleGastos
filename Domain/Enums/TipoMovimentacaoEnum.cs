@@ -3,9 +3,6 @@
     public enum TipoMovimentacaoEnum
     {
         RECEITA,
-
         DESPESA,
-
-        TODOS,
     }
 }

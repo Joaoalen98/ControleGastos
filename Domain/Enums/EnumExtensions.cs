@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
 namespace Domain.Enums
@@ -7,9 +8,11 @@ namespace Domain.Enums
     {
         public static string GetDisplayName(this Enum value)
         {
-            FieldInfo field = value.GetType().GetField(value.ToString());
-            DisplayNameAttribute attribute = field.GetCustomAttribute<DisplayNameAttribute>();
-            return attribute != null ? attribute.DisplayName : value.ToString();
+            return value.GetType()
+            .GetMember(value.ToString())
+            .First()
+            .GetCustomAttribute<DisplayAttribute>()
+            ?.GetName()!;
         }
     }
 }

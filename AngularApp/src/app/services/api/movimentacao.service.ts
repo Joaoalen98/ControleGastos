@@ -9,9 +9,13 @@ import { Movimentacao } from 'src/app/interfaces/movimentacao.model';
 export class MovimentacaoService extends BaseApiService {
   obter(params: any) {
     let url = this.url + "api/v1/movimentacao";
-    return this.http.get(url, {
+    return this.http.get<Movimentacao[]>(url, {
       params
     });
+  }
+
+  obterPorMesAno(mes: number, ano: number) {
+    return this.http.get<Movimentacao[]>(this.url + `api/v1/movimentacao/${mes}/${ano}`);
   }
 
   criar(model: NovaMovimentacaoModel) {

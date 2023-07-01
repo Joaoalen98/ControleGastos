@@ -7,7 +7,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './shared/components/header/header.component';
-import { AuthInterceptor } from './services/api/auth.interceptor';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ToastComponent } from './shared/components/toast/toast.component';
 
 @NgModule({

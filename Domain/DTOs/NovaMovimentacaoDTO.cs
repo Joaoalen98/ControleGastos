@@ -1,5 +1,3 @@
-using Domain.Enums;
-
 namespace Domain.DTOs
 {
     public class NovaMovimentacaoDTO
@@ -7,8 +5,8 @@ namespace Domain.DTOs
         public double Valor { get; set; }
         public string Descricao { get; set; }
         public DateTime DataEntrada { get; set; }
-        public CategoriaReceitaEnum? CategoriaReceita { get; set; }
-        public CategoriaDespesaEnum? CategoriaDespesa { get; set; }
+        public string Categoria { get; set; }
+        public string Tipo { get; set; }
         public string UsuarioId { get; set; }
     }
 }

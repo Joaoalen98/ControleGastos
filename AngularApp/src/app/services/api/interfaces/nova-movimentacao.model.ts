@@ -2,7 +2,7 @@ export interface NovaMovimentacaoModel {
     valor: number;
     descricao: string;
     dataEntrada: string;
-    categoriaReceita?: string;
-    categoriaDespesa?: string;
+    categoria: string;
+    tipo: string;
     usuarioId: string;
 }

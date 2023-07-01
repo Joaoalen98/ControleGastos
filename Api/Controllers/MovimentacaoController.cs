@@ -24,9 +24,7 @@ namespace Api.Controllers
         public async Task<IActionResult> Obter(
             [FromQuery] DateTime? dataInicial,
             [FromQuery] DateTime? dataFinal,
-            [FromQuery] CategoriaReceitaEnum? categoriaReceita,
-            [FromQuery] CategoriaDespesaEnum? categoriaDespesa,
-            [FromQuery] TipoMovimentacaoEnum? tipoMovimentacao = TipoMovimentacaoEnum.TODOS
+            [FromQuery] string? categoria
         )
         {
             try
@@ -35,10 +33,23 @@ namespace Api.Controllers
                 var entradas = await movimentacaoServico.ObterTodos(
                     usuarioId, 
                     dataInicial, 
-                    dataFinal, 
-                    categoriaReceita,
-                    categoriaDespesa,
-                    tipoMovimentacao);
+                    dataFinal,
+                    categoria);
+                return Ok(entradas);
+            }
+            catch (System.Exception ex)
+            {
+                return EnviarErro(500, "Erro interno");
+            }
+        }
+
+        [HttpGet("{mes}/{ano}")]
+        public async Task<IActionResult> ObterPorMesAno(int mes, int ano)
+        {
+            try
+            {
+                var usuarioId = User.FindFirst("Id").Value;
+                var entradas = await movimentacaoServico.ObterPorMesAno(usuarioId, mes, ano);
                 return Ok(entradas);
             }
             catch (System.Exception ex)
@@ -109,6 +120,12 @@ namespace Api.Controllers
             {
                 return EnviarErro(500, "Erro Interno");
             }
+        }
+
+        [HttpGet("categorias")]
+        public IActionResult ObterCategorias()
+        {
+            return Ok(movimentacaoServico.ObterCategorias());
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Domain.Entidades
+﻿namespace Domain.Entidades
 {
     public class Movimentacao
     {
@@ -9,18 +7,8 @@ namespace Domain.Entidades
         public double Valor { get; set; }
         public string Descricao { get; set; }
         public DateTime DataEntrada { get; set; }
-        public CategoriaReceitaEnum? CategoriaReceita { get; set; }
-        public CategoriaDespesaEnum? CategoriaDespesa { get; set; }
-        
-        public string? CategoriaReceitaString
-        {
-            get => CategoriaReceita?.GetDisplayName();
-        }
-
-        public string? CategoriaDespesaString
-        {
-            get => CategoriaDespesa?.GetDisplayName();
-        }
+        public string Categoria { get; set; }
+        public string Tipo { get; set; }
 
         public Movimentacao()
         {

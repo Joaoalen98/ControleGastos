@@ -1,0 +1,52 @@
+<div class="container mt-3">
+    <div class="d-flex mb-3 align-items-center justify-content-center">
+        <button class="btn btn-primary" (click)="pesquisarMovimentacoes(-1)">
+            -
+        </button>
+        <div class="">
+            <div class="card">
+                <div class="card-body">
+                    {{mes}}/{{ano}}
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-primary" (click)="pesquisarMovimentacoes(1)">
+            +
+        </button>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Suas Receitas 
+                    <i class="bi bi-piggy-bank-fill text-success"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ valorReceita | currency:'BRL' }}</h5>
+                    <a routerLink="/movimentacoes/receitas" class="btn btn-success">Ir Para</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Suas Despesas
+                    <i class="bi bi-bank2 text-danger"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ valorDespesa | currency:'BRL' }}</h5>
+                    <a routerLink="/movimentacoes/receitas" class="btn btn-danger">Ir Para</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="cold-md-12 mt-3">
+        <div class="col-md-6">
+            <h2>Seu Balanço Mensal:</h2>
+            <div class="col-md-10">
+                <canvas #canvasBalanco></canvas>
+            </div>
+        </div>
+    </div>
+</div>

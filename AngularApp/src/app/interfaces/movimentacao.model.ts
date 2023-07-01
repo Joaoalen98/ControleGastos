@@ -4,8 +4,6 @@ export interface Movimentacao {
     valor: number;
     descricao: number;
     dataEntrada: string;
-    categoriaReceita: number;
-    categoriaReceitaString: string;
-    categoriaDespesa: number;
-    categoriaDespesaString: string;
+    categoria: number;
+    tipo: string;
 }

@@ -1,5 +1,4 @@
 using Domain.Entidades;
-using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repositorio
@@ -29,9 +28,7 @@ namespace Repositorio
             string usuarioId,
             DateTime? dataInicial,
             DateTime? dataFinal,
-            CategoriaReceitaEnum? categoriaReceita,
-            CategoriaDespesaEnum? categoriaDespesa,
-            TipoMovimentacaoEnum? tipoMovimentacao)
+            string? categoria)
         {
             var query = context.Movimentacoes.Where(x => x.UsuarioId == usuarioId);
 
@@ -40,25 +37,23 @@ namespace Repositorio
                 query = query.Where(x => x.DataEntrada >= dataInicial && x.DataEntrada <= dataFinal);
             }
 
-            if (tipoMovimentacao == TipoMovimentacaoEnum.RECEITA)
+            if (!string.IsNullOrEmpty(categoria))
             {
-                query = query.Where(x => x.Valor > 0);
-            }
-            else if (tipoMovimentacao == TipoMovimentacaoEnum.DESPESA)
-            {
-                query = query.Where(x => x.Valor < 0);
-            }
-
-            if (categoriaDespesa != null)
-            {
-                query = query.Where(x => x.CategoriaDespesa == categoriaDespesa);
-            }
-            if (categoriaReceita != null)
-            {
-                query = query.Where(x => x.CategoriaReceita == categoriaReceita);
+                query = query.Where(x => x.Categoria == categoria);
             }
 
             return await query.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Movimentacao>> ObterPorMesAno(string usuarioId, int mes, int ano)
+        {
+            var movs = await context.Movimentacoes
+                .Where(x => x.UsuarioId == usuarioId
+                && x.DataEntrada.Year == ano
+                && x.DataEntrada.Month == mes)
+                .ToListAsync();
+
+            return movs;
         }
 
         public async Task<Movimentacao?> ObterPorId(string id)

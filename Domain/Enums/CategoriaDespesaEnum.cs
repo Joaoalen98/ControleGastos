@@ -24,5 +24,8 @@ namespace Domain.Enums
 
         [Display(Name = "Mensalidades")]
         MENSALIDADES,
+
+        [Display(Name = "Outro")]
+        OUTRO,
     }
 }
