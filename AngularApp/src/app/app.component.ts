@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   template: `
     <app-header />
+    <app-toast aria-live="polite" aria-atomic="true"></app-toast>
     <router-outlet></router-outlet>
   `
 })
