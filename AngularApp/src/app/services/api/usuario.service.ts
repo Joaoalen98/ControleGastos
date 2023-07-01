@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api.service';
-import { LoginModel } from 'src/app/areas/usuario/interfaces/login.model';
-import { CadastroModel } from 'src/app/areas/usuario/interfaces/cadastro.model';
-import { LoginCorretoModel } from 'src/app/areas/usuario/interfaces/login-correto.model';
+import { CadastroModel } from 'src/app/services/api/interfaces/cadastro.model';
 import { Usuario } from 'src/app/interfaces/usuario.model';
+import { LoginCorretoModel } from './interfaces/login-correto.model';
+import { LoginModel } from './interfaces/login.model';
 
 @Injectable({
   providedIn: 'root'

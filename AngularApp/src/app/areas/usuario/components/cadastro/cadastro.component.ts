@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UsuarioService } from 'src/app/services/api/usuario.service';
-import { CadastroModel } from '../../interfaces/cadastro.model';
+import { CadastroModel } from '../../../../services/api/interfaces/cadastro.model';
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/services/bootstrap/toast.service';
 
