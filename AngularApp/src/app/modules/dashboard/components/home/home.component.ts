@@ -46,22 +46,15 @@ export class HomeComponent implements OnInit {
     this.obterMovimentacoes(this.mes, this.ano);
   }
 
-  pesquisarMovimentacoes(valor: number) {
-    this.mes += valor;
-    if (this.mes == 0) {
-      this.mes = 12;
-      this.ano -= 1;
-    } else if (this.mes == 13) {
-      this.mes = 1;
-      this.ano += 1
-    }
-
-    this.obterMovimentacoes(this.mes, this.ano);
+  pesquisarMovimentacoes(e: any) {
+    this.obterMovimentacoes(e.mes, e.ano);
   }
 
   obterMovimentacoes(mes: number, ano: number) {
-    this.movimentacaoService.obterPorMesAno(mes, ano).subscribe({
+    this.movimentacaoService.obter({ mes, ano })
+      .subscribe({
       next: (value) => {
+        console.log({value, param: { mes, ano } });
         this.movimentacoes = value;
         this.chartBalanco?.destroy();
         this.graficoDespesaReceita(this.canvasBalanco.nativeElement);

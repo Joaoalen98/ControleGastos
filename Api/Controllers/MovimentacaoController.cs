@@ -19,37 +19,14 @@ namespace Api.Controllers
             this.movimentacaoServico = movimentacaoServico;
         }
 
-
         [HttpGet]
         public async Task<IActionResult> Obter(
-            [FromQuery] DateTime? dataInicial,
-            [FromQuery] DateTime? dataFinal,
-            [FromQuery] string? categoria
-        )
+            int mes, int ano, string? tipoMovimentacao)
         {
             try
             {
                 var usuarioId = User.FindFirst("Id").Value;
-                var entradas = await movimentacaoServico.ObterTodos(
-                    usuarioId, 
-                    dataInicial, 
-                    dataFinal,
-                    categoria);
-                return Ok(entradas);
-            }
-            catch (System.Exception ex)
-            {
-                return EnviarErro(500, "Erro interno");
-            }
-        }
-
-        [HttpGet("{mes}/{ano}")]
-        public async Task<IActionResult> ObterPorMesAno(int mes, int ano)
-        {
-            try
-            {
-                var usuarioId = User.FindFirst("Id").Value;
-                var entradas = await movimentacaoServico.ObterPorMesAno(usuarioId, mes, ano);
+                var entradas = await movimentacaoServico.ObterPorMesAno(usuarioId, mes, ano, tipoMovimentacao);
                 return Ok(entradas);
             }
             catch (System.Exception ex)

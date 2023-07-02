@@ -23,6 +23,7 @@ namespace Servico
                 UsuarioId = dto.UsuarioId,
                 Valor = dto.Valor,
                 Descricao = dto.Descricao,
+                Tipo = dto.Tipo,
             };
 
             await movimentacaoRepositorio.Criar(entrada);
@@ -46,9 +47,10 @@ namespace Servico
                 categoria);
         }
 
-        public async Task<IEnumerable<Movimentacao>> ObterPorMesAno(string usuarioId, int mes, int ano)
+        public async Task<IEnumerable<Movimentacao>> ObterPorMesAno(
+            string usuarioId, int mes, int ano, string? tipoMovimentacao)
         {
-            return await movimentacaoRepositorio.ObterPorMesAno(usuarioId, mes, ano);
+            return await movimentacaoRepositorio.ObterPorMesAno(usuarioId, mes, ano, tipoMovimentacao);
         }
 
         public async Task<Movimentacao?> ObterPorId(string id)
@@ -60,12 +62,6 @@ namespace Servico
         {
             var entrada = await movimentacaoRepositorio.ObterPorId(id);
             await movimentacaoRepositorio.Deletar(entrada);
-        }
-
-        public async Task ValoresPorCategoria(
-            string usuarioId, int mes, int ano, TipoMovimentacaoEnum tipoMovimentacao)
-        {
-            var movs = await movimentacaoRepositorio.ObterPorMesAno(usuarioId, mes, ano);
         }
 
         public dynamic ObterCategorias()

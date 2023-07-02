@@ -47,9 +47,12 @@ builder.Services.AddTransient<UsuarioRepositorio>();
 builder.Services.AddTransient<MovimentacaoRepositorio>();
 
 var cors = new CorsPolicyBuilder();
-cors.WithOrigins("http://localhost:4200")
-    .AllowAnyHeader()
-    .AllowAnyMethod();
+if (builder.Environment.IsDevelopment())
+{
+    cors.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+}
 
 builder.Services.AddCors(x =>
 {

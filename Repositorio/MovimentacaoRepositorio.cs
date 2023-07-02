@@ -45,15 +45,20 @@ namespace Repositorio
             return await query.ToListAsync();
         }
 
-        public async Task<IEnumerable<Movimentacao>> ObterPorMesAno(string usuarioId, int mes, int ano)
+        public async Task<IEnumerable<Movimentacao>> ObterPorMesAno(
+            string usuarioId, int mes, int ano, string? tipoMovimentacao)
         {
-            var movs = await context.Movimentacoes
+            var movs = context.Movimentacoes
                 .Where(x => x.UsuarioId == usuarioId
                 && x.DataEntrada.Year == ano
-                && x.DataEntrada.Month == mes)
-                .ToListAsync();
+                && x.DataEntrada.Month == mes);
+            
+            if(!string.IsNullOrEmpty(tipoMovimentacao))
+            {
+                movs = movs.Where(x => x.Tipo == tipoMovimentacao);
+            }
 
-            return movs;
+            return await movs.ToListAsync();
         }
 
         public async Task<Movimentacao?> ObterPorId(string id)

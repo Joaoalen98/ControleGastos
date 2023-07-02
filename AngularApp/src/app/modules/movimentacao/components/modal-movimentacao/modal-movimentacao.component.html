@@ -1,0 +1,36 @@
+<div class="modal-header">
+    <h4 class="modal-title">Adicionar Movimentação</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+    <form [formGroup]="form">
+        <div class="form-group">
+            <label class="form-label" for="valor">Valor (R$)</label>
+            <input class="form-control" type="text" formControlName="valor" id="valor" />
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="descricao">Descrição</label>
+            <input class="form-control" type="text" formControlName="descricao" id="desricao" />
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="dataEntrada">Data</label>
+            <input class="form-control" type="date" formControlName="dataEntrada" id="dataEntrada" />
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="categoria">Categoria</label>
+            <select class="form-control" type="text" formControlName="categoria" id="categoria">
+                <option *ngFor="let categoria of categorias" [value]="categoria">
+                    {{ categoria }}
+                </option>
+            </select>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-success" (click)="activeModal.close('Close click')">
+        Cancelar
+    </button>
+    <button type="button" class="btn btn-success" (click)="adicionarMovimentacao()">
+        Salvar
+    </button>
+</div>
