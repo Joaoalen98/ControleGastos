@@ -43,9 +43,10 @@ export class LoginComponent implements OnInit {
           next:(res) => {
             localStorage.setItem('usuario', JSON.stringify(res.usuario));
             localStorage.setItem('token', JSON.stringify(res.token));
-            this.router.navigate(['dashboard', '']);
+            this.router.navigate(['dashboard']);
           },
           error: (res) => {
+            console.log(res);
             this.toastService.show(res.error.msg, { classname: 'bg-danger text-white' });
           }
         });

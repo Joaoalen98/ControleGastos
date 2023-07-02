@@ -9,15 +9,12 @@ import { ToastService } from "../services/bootstrap/toast.service";
 })
 export class AuthInterceptor implements HttpInterceptor {
 
-    constructor(
-        private router: Router,
-        private toastService: ToastService
-    ) { }
+    constructor() { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler) {
-        const token = localStorage.getItem('token') || "";
+        const token = JSON.parse(localStorage.getItem('token')!) || "";
         const reqClone = req.clone({
-            headers: req.headers.set('Authorization', `Bearer ${JSON.parse(token)}`),
+            headers: req.headers.set('Authorization', `Bearer ${token}`),
         })
 
         return next.handle(reqClone)
@@ -26,10 +23,8 @@ export class AuthInterceptor implements HttpInterceptor {
                     next: (val) => val,
                     error: (val: HttpErrorResponse) => {
                         if (val.status == 403 || val.status == 401) {
-                            this.toastService.show('Sua sessão expirou, faça login novamente', { classname: 'bg-danger text-white '});
                             localStorage.removeItem('token');
                             localStorage.removeItem('usuario');
-                            this.router.navigate(['usuario', 'login']);
                         }
                     }
                 })
