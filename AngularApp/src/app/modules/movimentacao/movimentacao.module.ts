@@ -7,6 +7,7 @@ import { DespesasComponent } from './components/despesas/despesas.component';
 import { ModalMovimentacaoComponent } from './components/modal-movimentacao/modal-movimentacao.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TelaBaseComponent } from './components/tela-base/tela-base.component';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReceitasComponent,
     DespesasComponent,
     ModalMovimentacaoComponent,
+    TelaBaseComponent,
   ],
   imports: [
     CommonModule,

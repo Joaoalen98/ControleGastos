@@ -27,10 +27,10 @@
     </form>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-outline-success" (click)="activeModal.close('Close click')">
+    <button type="button" [class]="tipo == 'RECEITA' ? 'btn btn-outline-success' : 'btn btn-outline-danger'" (click)="activeModal.close('Close click')">
         Cancelar
     </button>
-    <button type="button" class="btn btn-success" (click)="adicionarMovimentacao()">
+    <button type="button" [class]="tipo == 'RECEITA' ? 'btn btn-success' : 'btn btn-danger'" (click)="adicionarMovimentacao()">
         Salvar
     </button>
 </div>

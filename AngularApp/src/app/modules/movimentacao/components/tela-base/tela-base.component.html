@@ -1,0 +1,75 @@
+<app-mes-ano-toggle (mesAnoChange)="pesquisaMovimentacoes($event)" />
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                Pendentes
+                <i class="bi bi-alarm-fill" [class]="[textCss]"></i>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">R$ 0,00</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                {{ textPassados }}
+                <i class="bi bi-arrow-down-circle-fill" [class]="[textCss]"></i>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">R$ 0,00</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                Total
+                <i class="bi bi-currency-exchange" [class]="[textCss]"></i>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">R$ 0,00</h5>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12 mt-3">
+    <button [class]="btnCss" (click)="abrirModal()">
+        {{ legendaBtnAdd }}
+    </button>
+</div>
+<div class="col-md-12 mt-3">
+    <h2>Seu Extrato Mensal:</h2>
+    <table class="table" *ngIf="movimentacoes !== undefined">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Categoria</th>
+                <th>Valor</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="movimentacoes.length === 0">
+                <td colspan="5">Não possui movimentações neste mês</td>
+            </tr>
+            <tr *ngFor="let mov of movimentacoes">
+                <td>{{ mov.dataEntrada | date:'dd/MM/yyyy' }}</td>
+                <td>{{ mov.descricao }}</td>
+                <td>{{ mov.categoria }}</td>
+                <td>{{ mov.valor | currency:'BRL' }}</td>
+                <td>
+                    <button [class]="btnCss" (click)="abrirModal(mov)">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    |
+                    <button [class]="btnCss" (click)="deletaMovimentacao(mov.id)">
+                        <i class="bi bi-trash3-fill"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

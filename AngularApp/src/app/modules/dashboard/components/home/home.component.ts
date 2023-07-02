@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   movimentacoes?: Movimentacao[];
   chartBalanco?: Chart;
   
-  get receitas () { return this.movimentacoes?.filter(x => x.tipo === 'Receita'); }
+  get receitas () { return this.movimentacoes?.filter(x => x.tipo === 'RECEITA'); }
   get valorReceita() {
     let valor = 0.00;
     for(const mov of this.receitas || []) {
@@ -26,7 +26,8 @@ export class HomeComponent implements OnInit {
     }
     return valor;
   }
-  get despesas() { return this.movimentacoes?.filter(x => x.tipo === 'Despesa'); }
+
+  get despesas() { return this.movimentacoes?.filter(x => x.tipo === 'DESPESA'); }
   get valorDespesa() {
     let valor = 0.00;
     for (const mov of this.despesas || []) {
@@ -47,6 +48,8 @@ export class HomeComponent implements OnInit {
   }
 
   pesquisarMovimentacoes(e: any) {
+    this.mes = e.mes;
+    this.ano = e.ano
     this.obterMovimentacoes(e.mes, e.ano);
   }
 
@@ -54,7 +57,6 @@ export class HomeComponent implements OnInit {
     this.movimentacaoService.obter({ mes, ano })
       .subscribe({
       next: (value) => {
-        console.log({value, param: { mes, ano } });
         this.movimentacoes = value;
         this.chartBalanco?.destroy();
         this.graficoDespesaReceita(this.canvasBalanco.nativeElement);

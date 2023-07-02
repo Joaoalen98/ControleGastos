@@ -12,6 +12,7 @@ import { ToastService } from 'src/app/services/bootstrap/toast.service';
   styleUrls: ['./modal-movimentacao.component.scss']
 })
 export class ModalMovimentacaoComponent implements OnInit {
+  @Input() edicao: boolean = false;
   @Input() tipo!: string;
   @Input() categorias: string[] = [];
   @Input() movimentacao?: Movimentacao
@@ -35,9 +36,10 @@ export class ModalMovimentacaoComponent implements OnInit {
     this.form = new FormBuilder().group({
       valor: [this.movimentacao?.valor, [Validators.required]],
       descricao: [this.movimentacao?.descricao, [Validators.required]],
-      dataEntrada: [this.movimentacao?.dataEntrada, [Validators.required]],
+      dataEntrada: [this.movimentacao?.dataEntrada.toString().split('T')[0], [Validators.required]],
       categoria: [this.movimentacao?.categoria, [Validators.required]],
     });
+    console.log(this.movimentacao?.dataEntrada);
   }
 
   sucesso() {
@@ -58,18 +60,33 @@ export class ModalMovimentacaoComponent implements OnInit {
         tipo: this.tipo,
       }
 
-      this.movimentacaoService.criar(model as any)
-      .subscribe({
-        next: (res) => {
-          this.toastService.show('Adicionado com sucesso!', { classname: 'bg-success text-white' });
-          this.sucesso();
-          this.activeModal.dismiss();
-        },
-        error: (res) => {
-          this.toastService.show('Erro ao adicionar movimentação!', { classname: 'bg-danger text-white' });
-          console.log(res);
-        }
-      });
+      if (this.edicao) {
+        this.movimentacaoService.editar(model)
+          .subscribe({
+            next: (res) => {
+              this.toastService.show('Movimentação editada com sucesso', { classname: 'bg-success text-white' });
+              this.sucesso();
+              this.activeModal.dismiss();
+            },
+            error: (res) => {
+              this.toastService.show('Ocorreu um erro ao tentar editar esta movimentação', { classname: 'bg-danger text-white' });
+            }
+          });
+      } else {
+        this.movimentacaoService.criar(model as any)
+        .subscribe({
+          next: (res) => {
+            this.toastService.show('Adicionado com sucesso!', { classname: 'bg-success text-white' });
+            this.sucesso();
+            this.activeModal.dismiss();
+          },
+          error: (res) => {
+            this.toastService.show('Erro ao adicionar movimentação!', { classname: 'bg-danger text-white' });
+            console.log(res);
+          }
+        });
+      }
+
     }
   }
 }

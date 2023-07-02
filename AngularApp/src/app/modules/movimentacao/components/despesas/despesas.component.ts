@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./despesas.component.scss']
 })
 export class DespesasComponent {
-
+  tipoMovimentacao = 'DESPESA';
 }
