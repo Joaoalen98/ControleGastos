@@ -13,7 +13,7 @@ import { ModalMovimentacaoComponent } from '../modal-movimentacao/modal-moviment
 })
 export class TelaBaseComponent implements OnInit {
   @Input() tipoMovimentacao!: string;
-  mes: number = new Date().getMonth();
+  mes: number = new Date().getMonth() + 1;
   ano: number = new Date().getFullYear();
   movimentacoes?: Movimentacao[];
   categorias!: CategoriasModel;
@@ -62,6 +62,30 @@ export class TelaBaseComponent implements OnInit {
     this.mes = e.mes;
     this.ano = e.ano;
     this.obterMovimentacoes(e.mes, e.ano);
+  }
+
+  somaPendentes() {
+    let valor = 0.00;
+    for (const mov of this.movimentacoes?.filter(x => new Date(x.dataEntrada) >= new Date()) || []) {
+      valor += mov.valor;
+    }
+    return valor;
+  }
+
+  somaPassados() {
+    let valor = 0.00;
+    for (const mov of this.movimentacoes?.filter(x => new Date(x.dataEntrada) <= new Date()) || []) {
+      valor += mov.valor;
+    }
+    return valor;
+  }
+
+  somaTotal() {
+    let valor = 0.00;
+    for (const mov of this.movimentacoes || []) {
+      valor += mov.valor;
+    }
+    return valor;
   }
 
   obterCategorias() {

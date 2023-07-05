@@ -6,7 +6,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./mes-ano-toggle.component.scss']
 })
 export class MesAnoToggleComponent {
-  mes: number = new Date().getMonth();
+  mes: number = new Date().getMonth() + 1;
   ano: number = new Date().getFullYear();
   @Output() mesAnoChange = new EventEmitter<{ mes: number, ano: number }>();
 

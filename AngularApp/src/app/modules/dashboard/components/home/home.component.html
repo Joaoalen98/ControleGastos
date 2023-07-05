@@ -1,37 +1,42 @@
 <div class="container mt-3">
     <app-mes-ano-toggle (mesAnoChange)="pesquisarMovimentacoes($event)" />
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    Suas Receitas 
-                    <i class="bi bi-piggy-bank-fill text-success"></i>
+    <div *ngIf="!carregando">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Suas Receitas 
+                        <i class="bi bi-piggy-bank-fill text-success"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ obterReceita() | currency:'BRL' }}</h5>
+                        <a routerLink="/movimentacao/receitas" class="btn btn-success">Ir Para</a>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{ valorReceita | currency:'BRL' }}</h5>
-                    <a routerLink="/movimentacao/receitas" class="btn btn-success">Ir Para</a>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Suas Despesas
+                        <i class="bi bi-bank2 text-danger"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ obterDespesa() | currency:'BRL' }}</h5>
+                        <a routerLink="/movimentacao/despesas" class="btn btn-danger">Ir Para</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    Suas Despesas
-                    <i class="bi bi-bank2 text-danger"></i>
+        <hr>
+        <div class="cold-md-12 mt-3">
+            <div class="col-md-6">
+                <h2>Seu Balanço Mensal:</h2>
+                <div class="col-md-10">
+                    <app-grafico-balanco-mensal
+                        [valorDespesa]="obterDespesa()"
+                        [valorReceita]="obterReceita()"
+                    />
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{ valorDespesa | currency:'BRL' }}</h5>
-                    <a routerLink="/movimentacao/despesas" class="btn btn-danger">Ir Para</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <hr>
-    <div class="cold-md-12 mt-3">
-        <div class="col-md-6">
-            <h2>Seu Balanço Mensal:</h2>
-            <div class="col-md-10">
-                <canvas #canvasBalanco></canvas>
             </div>
         </div>
     </div>

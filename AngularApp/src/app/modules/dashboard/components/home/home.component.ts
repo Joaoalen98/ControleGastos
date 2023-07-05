@@ -1,10 +1,7 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Chart, registerables } from 'chart.js';
+import { Component, OnInit, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { Movimentacao } from 'src/app/interfaces/movimentacao.model';
 import { MovimentacaoService } from 'src/app/services/api/movimentacao.service';
 import { ToastService } from 'src/app/services/bootstrap/toast.service';
-
-Chart.register(...registerables);
 
 @Component({
   selector: 'app-home',
@@ -12,31 +9,10 @@ Chart.register(...registerables);
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  
-  mes = new Date().getMonth();
+  carregando = false;
+  mes = new Date().getMonth() + 1;
   ano = new Date().getFullYear();
   movimentacoes?: Movimentacao[];
-  chartBalanco?: Chart;
-  
-  get receitas () { return this.movimentacoes?.filter(x => x.tipo === 'RECEITA'); }
-  get valorReceita() {
-    let valor = 0.00;
-    for(const mov of this.receitas || []) {
-      valor += mov.valor;
-    }
-    return valor;
-  }
-
-  get despesas() { return this.movimentacoes?.filter(x => x.tipo === 'DESPESA'); }
-  get valorDespesa() {
-    let valor = 0.00;
-    for (const mov of this.despesas || []) {
-      valor += mov.valor;
-    }
-    return valor;
-  }
-
-  @ViewChild('canvasBalanco') canvasBalanco!: ElementRef<HTMLCanvasElement>;
 
   constructor (
     private movimentacaoService: MovimentacaoService,
@@ -54,12 +30,12 @@ export class HomeComponent implements OnInit {
   }
 
   obterMovimentacoes(mes: number, ano: number) {
+    this.carregando = true;
     this.movimentacaoService.obter({ mes, ano })
       .subscribe({
       next: (value) => {
         this.movimentacoes = value;
-        this.chartBalanco?.destroy();
-        this.graficoDespesaReceita(this.canvasBalanco.nativeElement);
+        this.carregando = false;
       },
       error: (res) => {
         this.toastService.show(JSON.stringify(res), { classname: 'bg-danger text-white' });
@@ -67,21 +43,19 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  graficoDespesaReceita(item: HTMLCanvasElement) {
-    this.chartBalanco = new Chart(item, {
-      type: 'bar',
-      data: {
-        labels: ['Receitas', 'Despesas'],
-        datasets: [{
-          label: 'Valor (R$)',
-          data: [this.valorReceita, this.valorDespesa],
-          borderWidth: 1,
-          backgroundColor: [
-            '#198754',
-            '#dc3545'
-          ]
-        }]
-      }
-    });
+  obterReceita() {
+    let valor = 0.00;
+    for (const mov of this.movimentacoes?.filter(x => x.tipo === 'RECEITA') || []) {
+      valor += mov.valor;
+    }
+    return valor;
+  }
+
+  obterDespesa() {
+    let valor = 0.00;
+    for (const mov of this.movimentacoes?.filter(x => x.tipo === 'DESPESA') || []) {
+      valor += mov.valor;
+    }
+    return valor;
   }
 }
